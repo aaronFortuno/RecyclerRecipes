@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string name="albondigas_recipe_details">Ingredientes:\n
+- 500g de carne picada de ternera\n
+- 1 huevo\n
+- 50g de pan rallado\n
+- 1 cebolla picada\n
+- 2 dientes de ajo picados\n
+- Perejil fresco picado\n
+- Sal y pimienta al gusto\n
+- Aceite de oliva\n
+- 1 lata de tomate triturado\n
+- Caldo de carne o agua\n
+- Sal y azúcar al gusto\n
+\n
+Instrucciones:\n
+1. En un bol, mezcla la carne picada con el huevo, el pan rallado, la cebolla, el ajo y el perejil. Salpimienta al gusto y mezcla bien.\n
+2. Forma pequeñas albóndigas con la mezcla y resérvalas.\n
+3. En una sartén grande, calienta un poco de aceite de oliva y dora las albóndigas por todos lados. Retíralas y reserva.\n
+4. En la misma sartén, añade el tomate triturado y el caldo de carne o agua. Condimenta con sal y una pizca de azúcar para equilibrar la acidez del tomate.\n
+5. Vuelve a poner las albóndigas en la salsa y cocina a fuego lento durante unos 20-25 minutos hasta que estén bien cocidas y la salsa haya espesado.\n
+6. Sirve las albóndigas con un poco de salsa y acompáñalas con arroz blanco o pasta.</string>
+    <string name="pastel_zanahoria_recipe_details">Ingredientes:\n
+- 2 tazas de zanahorias ralladas\n
+- 1 taza de azúcar\n
+- 1 taza de aceite vegetal\n
+- 4 huevos\n
+- 2 tazas de harina\n
+- 2 cucharaditas de polvo de hornear\n
+- 1 cucharadita de bicarbonato de sodio\n
+- 1 cucharadita de canela en polvo\n
+- 1/2 cucharadita de sal\n
+- 1/2 taza de nueces picadas (opcional)\n
+\n
+Para el glaseado de queso crema:\n
+- 1 paquete de queso crema (250g)\n
+- 1/2 taza de mantequilla a temperatura ambiente\n
+- 2 tazas de azúcar glasé\n
+- 1 cucharadita de extracto de vainilla\n
+\n
+Instrucciones:\n
+1. Precalienta el horno a 180°C. Engrasa y enharina un molde para pastel.\n
+2. En un bol grande, mezcla las zanahorias ralladas, el azúcar, el aceite y los huevos hasta que estén bien combinados.\n
+3. En otro bol, mezcla la harina, el polvo de hornear, el bicarbonato de sodio, la canela y la sal.\n
+4. Agrega los ingredientes secos a la mezcla de zanahorias y remueve hasta que estén bien incorporados. Si deseas, añade las nueces picadas.\n
+5. Vierte la masa en el molde preparado y hornea durante aproximadamente 40-45 minutos o hasta que al insertar un palillo en el centro, este salga limpio.\n
+6. Mientras se enfría el pastel, prepara el glaseado de queso crema. En un bol, bate el queso crema y la mantequilla hasta obtener una mezcla suave y esponjosa. Agrega el azúcar glasé y la vainilla, y bate hasta que esté bien combinado.\n
+7. Una vez que el pastel esté completamente frío, cubre la parte superior con el glaseado de queso crema. Decora con nueces picadas si lo deseas. ¡Disfruta de tu delicioso pastel de zanahoria!</string>
+    <string name="ensalada_cesar_recipe_details">Ingredientes:\n
+- 2 pechugas de pollo\n
+- 2 cucharadas de aceite de oliva\n
+- Sal y pimienta al gusto\n
+- Lechuga romana fresca\n
+- Croutones\n
+- Queso parmesano rallado\n
+- Para el aderezo César:\n
+  - 1/2 taza de mayonesa\n
+  - 1 cucharada de mostaza Dijon\n
+  - 1 diente de ajo picado\n
+  - 2 cucharadas de jugo de limón\n
+  - 1 cucharada de salsa Worcestershire\n
+  - 2 filetes de anchoa en aceite (opcional)\n
+  - Sal y pimienta al gusto\n
+\n
+Instrucciones:\n
+1. Prepara el aderezo César mezclando la mayonesa, la mostaza Dijon, el ajo picado, el jugo de limón y la salsa Worcestershire en un tazón. Si deseas un sabor más intenso, puedes agregar los filetes de anchoa picados. Sazona con sal y pimienta al gusto. Reserva el aderezo en el refrigerador hasta que esté listo para usar.\n
+2. Sazona las pechugas de pollo con sal y pimienta al gusto. En una sartén grande, calienta el aceite de oliva a fuego medio-alto. Agrega las pechugas de pollo y cocínalas hasta que estén doradas y bien cocidas por ambos lados. Retira del fuego y deja enfriar antes de cortarlas en tiras o trozos.\n
+3. Lava y seca las hojas de lechuga romana y córtalas en trozos más pequeños si es necesario.\n
+4. En un bol grande, mezcla la lechuga con el pollo cocido, los croutones y el queso parmesano rallado.\n
+5. Agrega el aderezo César a la ensalada y mezcla bien para asegurarte de que todos los ingredientes estén cubiertos con el delicioso aderezo.\n
+6. Sirve la Ensalada César en platos individuales y decora con más queso parmesano y croutones si lo deseas. ¡Disfruta de esta clásica y deliciosa ensalada!</string>
+
+</resources>

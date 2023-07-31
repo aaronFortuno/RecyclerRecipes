@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Codelabs11.1 - Recycler Recipes</string>
+    <string name="close_button">Cerrar</string>
+    <string name="recipe_id">ID de la receta</string>
+    <string name="recipe_title">Nombre de la receta</string>
+    <string name="recipe_resume">Resumen de la receta</string>
+    <string name="recipe_details">Detalles de la receta</string>
+    <string name="take_photo_button">Tomar una foto</string>
+</resources>
