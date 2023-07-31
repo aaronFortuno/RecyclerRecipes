@@ -22,6 +22,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
     // ActivityResultLauncher para capturar la imagen
     private ActivityResultLauncher<Uri> captureImageLauncher;
 
+    private AppDatabase appDatabase;
 
     public MainActivity() {
     }
@@ -68,6 +70,13 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Inicialización de la BD en Room
+        appDatabase = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class,
+                "recipe_database")
+                        .build();
+
         setContentView(R.layout.activity_main);
 
         // Inicializa la lista de IDs de recetas desde los recursos
