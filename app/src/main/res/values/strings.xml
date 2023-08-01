@@ -10,4 +10,8 @@
     <string name="recipe_image_content_description">Recipe image</string>
     <string name="photo_preview_content_description">Previsualización de la imagen</string>
     <string name="fab_button_content_description">Floating Action Button - Add new recipe</string>
+    <string name="nav_settings_text">Opciones</string>
+    <string name="nav_header_title">RecyclerRecipes</string>
+    <string name="nav_header_created_by">Created by estemon</string>
+    <string name="nav_header_content_description">Navigation header</string>
 </resources>
