@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,10 +22,12 @@ import java.util.List;
  */
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHolder> {
 
-    private final List<String> titles;
+    /*private final List<String> titles;
     private final List<String> resumes;
     private final List<String> details;
-    private final List<Uri> photos;
+    private final List<Uri> photos;*/
+
+    private List<Recipe> recipes = new ArrayList<>();
 
     // Interface to handle clicks in the recipe elements.
     private OnRecipeClickListener recipeClickListener;
@@ -32,17 +35,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
     /**
      * Constructor for the RecipeAdapter.
      *
-     * @param titles   The list of recipe titles.
-     * @param resumes  The list of recipe resumes.
-     * @param details  The list of recipe details.
-     * @param photos   The list of photo URIs associated with each recipe.
+     * @param recipes  The recipes of the DB
      * @param listener The listener to handle recipe item clicks.
      */
-    public RecipeAdapter(List<String> titles, List<String> resumes, List<String> details, List<Uri> photos, OnRecipeClickListener listener) {
-        this.titles = titles;
-        this.resumes = resumes;
-        this.details = details;
-        this.photos = photos;
+    public RecipeAdapter(List<Recipe> recipes, OnRecipeClickListener listener) {
+        this.recipes = recipes;
         recipeClickListener = listener;
     }
 
@@ -70,10 +67,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
     public void onBindViewHolder(@NonNull RecipeAdapter.RecipeHolder holder, int position) {
 
         // Retrieve the data for the current position
-        String title = titles.get(holder.getAdapterPosition());
-        String resume = resumes.get(holder.getAdapterPosition());
-        String detail = details.get(holder.getAdapterPosition());
-        Uri photoUri = photos.get(holder.getAdapterPosition());
+        Recipe recipe = recipes.get(position);
+        String title = recipe.getTitle();
+        String resume = recipe.getResume();
+        String detail = recipe.getDetails();
+        String photoUriString = recipe.getPhoto();
+        Uri photoUri = Uri.parse(photoUriString);
 
         // Set the title and resume in the corresponding views
         holder.recipeTitleView.setText(title);
@@ -109,7 +108,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
      */
     @Override
     public int getItemCount() {
-        return titles.size();
+        return recipes.size();
     }
 
     /**

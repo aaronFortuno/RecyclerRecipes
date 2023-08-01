@@ -1,12 +1,10 @@
 package net.estemon.codelabs111_recyclerrecipes;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -31,10 +29,11 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * MainActivity que muestra una lista de recetas en un RecyclerView.
@@ -42,16 +41,11 @@ import java.util.Locale;
  */
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnRecipeClickListener {
 
-    // Listas para almacenar los datos de las recetas
-    private final List<String> ids = new ArrayList<>();
-    private final List<String> titles = new ArrayList<>();
-    private final List<String> resumes = new ArrayList<>();
-    private final List<Uri> photos = new ArrayList<>();
-    private final List<String> details = new ArrayList<>();
-
+    // Lista para almacenar los datos de las recetas
+    final List<Recipe> recipes = new ArrayList<>();
 
     private RecyclerView mRecyclerView;
-    private RecipeAdapter mAdapter;
+    RecipeAdapter mAdapter;
 
     // URI de la foto capturada con la cámara
     private Uri photoUri;
@@ -60,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
     private ActivityResultLauncher<Uri> captureImageLauncher;
 
     private AppDatabase appDatabase;
+    private RecipeDao recipeDao;
 
     public MainActivity() {
     }
@@ -76,18 +71,14 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
                 AppDatabase.class,
                 "recipe_database")
                         .build();
+        recipeDao = appDatabase.recipeDao();
+        insertExampleRecipe();
 
         setContentView(R.layout.activity_main);
 
-        // Inicializa la lista de IDs de recetas desde los recursos
-        ids.addAll(Arrays.asList(this.getResources().getStringArray(R.array.recipe_ids)));
-
-        // Llena las listas de recetas con los datos de los recursos
-        populateLists(titles, resumes, photos, details);
-
         // Configura el RecyclerView y el adaptador
         mRecyclerView = findViewById(R.id.recycler_view);
-        mAdapter = new RecipeAdapter(titles, resumes, details, photos, this);
+        mAdapter = new RecipeAdapter(recipes, this);
 
         // Registra el OnRecipeClickListener en el adaptador
         mAdapter.setOnRecipeClickListener(this);
@@ -106,6 +97,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         fabAddRecipe.setOnClickListener(view -> showAddRecipeDialog());
     }
 
+    private void insertExampleRecipe() {
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(new InsertExampleRecipeRunnable(recipeDao, this));
+    }
+
     /**
      * Configura el ActivityResultLauncher para capturar imágenes de la cámara.
      * Establece el resultado de la captura de la imagen en el ImageView de vista previa.
@@ -121,43 +117,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
                     }
                 }
         );
-    }
-
-    /**
-     * Llena las listas de recetas con los datos de los recursos.
-     *
-     * @param titles   Lista para almacenar los títulos de las recetas.
-     * @param resumes  Lista para almacenar los resúmenes de las recetas.
-     * @param photos   Lista para almacenar las URIs de las fotos de las recetas.
-     * @param details  Lista para almacenar los detalles de las recetas.
-     */
-    private void populateLists(List<String> titles, List<String> resumes, List<Uri> photos, List<String> details) {
-        for (String id : ids) {
-            // TODO: Verificar si existe el título
-            @SuppressLint("DiscouragedApi") int titleResourceId = this.getResources().getIdentifier(id + "_recipe_title", "string", this.getPackageName());
-            String title = this.getString(titleResourceId);
-            titles.add(title);
-
-            // TODO: Verificar si existe el resumen
-            @SuppressLint("DiscouragedApi")int resumeResourceId = this.getResources().getIdentifier(id + "_recipe_resume", "string", this.getPackageName());
-            String resume = this.getString(resumeResourceId);
-            resumes.add(resume);
-
-            // TODO: Verificar si existe la imagen
-            @SuppressLint("DiscouragedApi")int photoResourceId = this.getResources().getIdentifier(id + "_recipe_photo", "drawable", this.getPackageName());
-            if (photoResourceId != 0) {
-                Uri photoUri = Uri.parse("android.resource://" + this.getPackageName() + "/" + photoResourceId);
-                photos.add(photoUri);
-            } else {
-                photos.add(null);
-            }
-            Log.d("PhotosList", "Photo URI for ID " + id + ": " + photoResourceId);
-
-            // TODO: Verificar si existe el detalle
-            @SuppressLint("DiscouragedApi")int detailResourceId = this.getResources().getIdentifier(id + "_recipe_details", "string", this.getPackageName());
-            String detail = this.getString(detailResourceId);
-            details.add(detail);
-        }
     }
 
     /**
@@ -246,28 +205,29 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
           En este caso, mostrar en el listado de recetas los datos de la nueva receta
          */
         dialogBuilder.setPositiveButton("Añadir receta", (dialogInterface, i) -> {
-            String recipeId = addRecipeId.getText().toString().trim();
+            int recipeId = addRecipeId.getId();
             String recipeTitle = addRecipeTitle.getText().toString().trim();
             String recipeResume = addRecipeResume.getText().toString().trim();
             String recipeDetails = addRecipeDetails.getText().toString().trim();
 
-            ids.add(recipeId);
-            titles.add(recipeTitle);
-            resumes.add(recipeResume);
-            details.add(recipeDetails);
-
+            Recipe newRecipe = new Recipe();
+            newRecipe.setId(recipeId);
+            newRecipe.setTitle(recipeTitle);
+            newRecipe.setResume(recipeResume);
+            newRecipe.setDetails(recipeDetails);
             if (photoUri != null) {
-                photos.add(photoUri);
+                newRecipe.setPhoto(photoUri.toString());
             } else {
-                photos.add(null);
+                newRecipe.setPhoto(null);
             }
 
+            recipes.add(newRecipe);
+
             // Notificar al adaptador que se ha agregado un nuevo elemento en la última posición
-            int newPos = titles.size() - 1;
+            int newPos = recipes.size() - 1;
             mAdapter.notifyItemInserted(newPos);
             mAdapter.notifyDataSetChanged();
 
-            //
             mRecyclerView.smoothScrollToPosition(newPos);
         });
 

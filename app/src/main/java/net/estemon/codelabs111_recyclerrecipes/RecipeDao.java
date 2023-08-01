@@ -14,4 +14,7 @@ public interface RecipeDao {
 
     @Query("SELECT * FROM recipes")
     List<Recipe> getAllRecipes();
+
+    @Query("SELECT COUNT(*) FROM recipes")
+    int getRecipeCount();
 }
