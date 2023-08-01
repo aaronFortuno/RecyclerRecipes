@@ -183,7 +183,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         View dialogView = inflater.inflate(R.layout.add_recipe_dialog, null);
         dialogBuilder.setView(dialogView);
 
-        EditText addRecipeId = dialogView.findViewById(R.id.add_recipe_id);
         EditText addRecipeTitle = dialogView.findViewById(R.id.add_recipe_title);
         EditText addRecipeResume = dialogView.findViewById(R.id.add_recipe_resume);
         EditText addRecipeDetails = dialogView.findViewById(R.id.add_recipe_details);
@@ -214,13 +213,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
           En este caso, mostrar en el listado de recetas los datos de la nueva receta
          */
         dialogBuilder.setPositiveButton("Añadir receta", (dialogInterface, i) -> {
-            int recipeId = addRecipeId.getId();
             String recipeTitle = addRecipeTitle.getText().toString().trim();
             String recipeResume = addRecipeResume.getText().toString().trim();
             String recipeDetails = addRecipeDetails.getText().toString().trim();
 
             Recipe newRecipe = new Recipe();
-            newRecipe.setId(recipeId);
             newRecipe.setTitle(recipeTitle);
             newRecipe.setResume(recipeResume);
             newRecipe.setDetails(recipeDetails);
