@@ -1,5 +1,6 @@
 package net.estemon.codelabs111_recyclerrecipes;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,6 +56,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
      * @param holder   The ViewHolder which should be updated to represent the contents of the item at the given position
      * @param position The position of the item within the adapter's data set
      */
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecipeAdapter.RecipeHolder holder, int position) {
 

@@ -1,8 +1,5 @@
 package net.estemon.codelabs111_recyclerrecipes;
 
-import android.net.Uri;
-
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -10,7 +7,6 @@ import androidx.room.PrimaryKey;
 public class Recipe {
 
     @PrimaryKey (autoGenerate = true)
-    @NonNull
     private int id;
 
     private String title;

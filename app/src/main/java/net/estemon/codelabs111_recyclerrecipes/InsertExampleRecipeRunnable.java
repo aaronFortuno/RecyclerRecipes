@@ -1,19 +1,21 @@
 package net.estemon.codelabs111_recyclerrecipes;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import java.util.List;
 
 public class InsertExampleRecipeRunnable implements Runnable {
 
-    private RecipeDao recipeDao;
-    private MainActivity mainActivity;
+    private final RecipeDao recipeDao;
+    private final MainActivity mainActivity;
 
     public InsertExampleRecipeRunnable(RecipeDao recipeDao, MainActivity mainActivity) {
         this.recipeDao = recipeDao;
         this.mainActivity = mainActivity;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void run() {
         if (recipeDao.getRecipeCount() == 0) {

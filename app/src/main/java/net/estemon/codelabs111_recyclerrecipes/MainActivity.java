@@ -1,11 +1,11 @@
 package net.estemon.codelabs111_recyclerrecipes;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         LayoutInflater inflater = this.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.add_recipe_dialog, null);
+        @SuppressLint("InflateParams") View dialogView = inflater.inflate(R.layout.add_recipe_dialog, null);
         final ImageView previewRecipePhoto = dialogView.findViewById(R.id.preview_recipe_photo);
 
         // Configura el lanzador para capturar imágenes de la cámara
@@ -212,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
      * Muestra un cuadro de diálogo para agregar una nueva receta.
      * Permite al usuario ingresar los detalles de la receta y capturar una foto con la cámara.
      */
+    @SuppressLint({"QueryPermissionsNeeded", "NotifyDataSetChanged"})
     private void showAddRecipeDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -224,24 +225,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         Button addRecipePhoto = dialogView.findViewById(R.id.add_recipe_photo);
         final ImageView previewRecipePhoto = dialogView.findViewById(R.id.preview_recipe_photo);
 
-        addRecipePhoto.setOnClickListener(view -> {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                File photoFile = createImageFile();
-                if (photoFile != null) {
-                    photoUri = CustomFileProvider.getUriForFile(
-                            MainActivity.this,
-                            "net.estemon.codelabs111_recyclerrecipes.fileprovider",
-                            photoFile
-                    );
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                    captureImageLauncher.launch(photoUri);
-                    Glide.with(MainActivity.this)
-                            .load(photoUri)
-                            .into(previewRecipePhoto);
-                }
-            }
-        });
+        addRecipePhotoAction(addRecipePhoto, previewRecipePhoto);
 
         /*
           Define el comportamiento del botón de confirmar los datos del diálogo
@@ -283,6 +267,29 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         alertDialog.show();
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
+    private void addRecipePhotoAction(Button addRecipePhoto, ImageView previewRecipePhoto) {
+        addRecipePhoto.setOnClickListener(view -> {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                File photoFile = createImageFile();
+                if (photoFile != null) {
+                    photoUri = CustomFileProvider.getUriForFile(
+                            MainActivity.this,
+                            "net.estemon.codelabs111_recyclerrecipes.fileprovider",
+                            photoFile
+                    );
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    captureImageLauncher.launch(photoUri);
+                    Glide.with(MainActivity.this)
+                            .load(photoUri)
+                            .into(previewRecipePhoto);
+                }
+            }
+        });
+    }
+
+    @SuppressLint("QueryPermissionsNeeded")
     private void showModifyRecipeDialog(int position) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -303,30 +310,13 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
                 .load(photoUri)
                 .into(previewRecipePhoto);
 
-        addRecipePhoto.setOnClickListener(view -> {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                File photoFile = createImageFile();
-                if (photoFile != null) {
-                    photoUri = CustomFileProvider.getUriForFile(
-                            MainActivity.this,
-                            "net.estemon.codelabs111_recyclerrecipes.fileprovider",
-                            photoFile
-                    );
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                    captureImageLauncher.launch(photoUri);
-                    Glide.with(MainActivity.this)
-                            .load(photoUri)
-                            .into(previewRecipePhoto);
-                }
-            }
-        });
+        addRecipePhotoAction(addRecipePhoto, previewRecipePhoto);
 
         /*
           Define el comportamiento del botón de confirmar los datos del diálogo
           En este caso, mostrar en el listado de recetas los datos de la nueva receta
          */
-        dialogBuilder.setPositiveButton("Añadir receta", (dialogInterface, i) -> {
+        dialogBuilder.setPositiveButton("Guardar cambios", (dialogInterface, i) -> {
             String recipeTitle = addRecipeTitle.getText().toString().trim();
             String recipeResume = addRecipeResume.getText().toString().trim();
             String recipeDetails = addRecipeDetails.getText().toString().trim();
@@ -334,25 +324,17 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
             recipe.setTitle(recipeTitle);
             recipe.setResume(recipeResume);
             recipe.setDetails(recipeDetails);
+
+            // Update the photo URI only if the user has taken a new photo
             if (photoUri != null) {
                 recipe.setPhoto(photoUri.toString());
-            } else {
-                Uri defaultPhotoUri = Uri.parse("content://" + getPackageName() + "/res/drawable/ic_add.png");
-                recipe.setPhoto(defaultPhotoUri.toString());
             }
-
-            //recipes.add(newRecipe);
 
             Executor executor = Executors.newSingleThreadExecutor();
             executor.execute(() -> {
                 recipeDao.insertRecipe(recipe);
                 loadRecipes();
             });
-
-            // Notificar al adaptador que se ha agregado un nuevo elemento en la última posición
-            int newPos = recipes.size() - 1;
-            mAdapter.notifyItemInserted(newPos);
-            mAdapter.notifyDataSetChanged();
         });
 
         dialogBuilder.setNegativeButton("Cancelar", null);
@@ -361,6 +343,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         alertDialog.show();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     void loadRecipes() {
         Executor executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
