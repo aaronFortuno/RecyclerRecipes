@@ -18,7 +18,6 @@ public class InsertExampleRecipeRunnable implements Runnable {
     public void run() {
         if (recipeDao.getRecipeCount() == 0) {
             Recipe recipe1 = new Recipe();
-            recipe1.setId(1);
             recipe1.setTitle("Receta 1");
             recipe1.setResume("Resumen de la receta 1");
             recipe1.setDetails("Detalles de la receta 1");

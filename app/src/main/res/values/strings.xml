@@ -6,4 +6,5 @@
     <string name="recipe_resume">Resumen de la receta</string>
     <string name="recipe_details">Detalles de la receta</string>
     <string name="take_photo_button">Tomar una foto</string>
+    <string name="recycler_item_id">"id: "</string>
 </resources>

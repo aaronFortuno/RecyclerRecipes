@@ -60,6 +60,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
 
         // Retrieve the data for the current position
         Recipe recipe = recipes.get(position);
+        int id = recipe.getId();
+        Log.i("RecipeAdapter.onBindViewHolder", "id: " + id);
         String title = recipe.getTitle();
         String resume = recipe.getResume();
         String detail = recipe.getDetails();
@@ -68,6 +70,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
 
         // Set the id, title and resume in the corresponding views
         holder.itemView.setTag(position);
+        holder.recipeIdView.setText(R.string.recycler_item_id + id);
         holder.recipeTitleView.setText(title);
         holder.recipeResumeView.setText(resume);
 
@@ -139,6 +142,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
          * TextView and ImageView to display the title, resume,
          * photo and details of the recipe.
          */
+        public final TextView recipeIdView;
         public final TextView recipeTitleView;
         public final TextView recipeResumeView;
         public final ImageView recipePhotoView;
@@ -155,6 +159,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
         public RecipeHolder(@NonNull View recipeView) {
             super(recipeView);
             LinearLayout layout = recipeView.findViewById(R.id.recipe_layout);
+            recipeIdView = layout.findViewById(R.id.recipe_id);
             recipeTitleView = layout.findViewById(R.id.recipe_title);
             recipeResumeView = layout.findViewById(R.id.recipe_resume);
             recipePhotoView = layout.findViewById(R.id.recipe_photo);
