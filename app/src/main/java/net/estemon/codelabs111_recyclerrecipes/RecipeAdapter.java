@@ -2,7 +2,6 @@ package net.estemon.codelabs111_recyclerrecipes;
 
 import android.net.Uri;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +21,7 @@ import java.util.List;
  */
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHolder> {
 
-    private List<Recipe> recipes = new ArrayList<>();
+    private final List<Recipe> recipes;
 
     // Interface to handle clicks in the recipe elements.
     private OnRecipeClickListener recipeClickListener;
@@ -37,9 +35,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
         this.recipes = recipes;
     }
 
-    public interface OnRecipeLongClickListener {
-        void onRecipeLongClick(int position);
-    }
     /**
      * Called when the RecyclerView needs a new {@link RecipeHolder} to represent an item.
      *
@@ -51,8 +46,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
     @Override
     public RecipeAdapter.RecipeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View recipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_item, parent, false);
-        RecipeHolder holder = new RecipeHolder(recipeView);
-        return holder;
+        return new RecipeHolder(recipeView);
     }
 
     /**
@@ -99,9 +93,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
             }
         });
 
-        holder.itemView.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
-            menu.add(0, 0, position, "Eliminar receta");
-        });
+        holder.itemView.setOnCreateContextMenuListener((menu, v, menuInfo) -> menu.add(0, 0, position, "Eliminar receta"));
     }
 
     /**

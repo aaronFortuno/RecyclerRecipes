@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,7 +23,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Insert;
 import androidx.room.Room;
 
 import com.bumptech.glide.Glide;
@@ -49,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
     // Lista para almacenar los datos de las recetas
     final List<Recipe> recipes = new ArrayList<>();
 
-    private RecyclerView mRecyclerView;
     RecipeAdapter mAdapter;
 
     // URI de la foto capturada con la cámara
@@ -58,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
     // ActivityResultLauncher para capturar la imagen
     private ActivityResultLauncher<Uri> captureImageLauncher;
 
-    private AppDatabase appDatabase;
     private RecipeDao recipeDao;
 
     public MainActivity() {
@@ -77,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         setContentView(R.layout.activity_main);
 
         // Configura el RecyclerView y el adaptador
-        mRecyclerView = findViewById(R.id.recycler_view);
+        RecyclerView mRecyclerView = findViewById(R.id.recycler_view);
         mAdapter = new RecipeAdapter(recipes);
 
         // Registra el OnRecipeClickListener en el adaptador
@@ -114,8 +110,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
         if (item.getItemId() == 0) {
             int position = item.getOrder();
             // Eliminar la receta de la base de datos
@@ -131,10 +125,10 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
     }
 
     private void initDatabase() {
-        appDatabase = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class,
-                "recipe_database")
-                        .build();
+        AppDatabase appDatabase = Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class,
+                        "recipe_database")
+                .build();
         recipeDao = appDatabase.recipeDao();
         insertExampleRecipe();
     }
@@ -303,12 +297,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
             String imageFileName = "JPEG_" + timeStamp + "_";
             File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-            File image = File.createTempFile(
+            return File.createTempFile(
                     imageFileName,
                     ".jpg",
                     storageDir
             );
-            return image;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
