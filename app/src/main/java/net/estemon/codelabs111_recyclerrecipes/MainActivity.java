@@ -67,12 +67,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         super.onCreate(savedInstanceState);
 
         // Inicialización de la BD en Room
-        appDatabase = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class,
-                "recipe_database")
-                        .build();
-        recipeDao = appDatabase.recipeDao();
-        insertExampleRecipe();
+        initDatabase();
 
         setContentView(R.layout.activity_main);
 
@@ -95,6 +90,20 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         // Configura el botón flotante para agregar nuevas recetas
         FloatingActionButton fabAddRecipe = findViewById(R.id.fab_add_recipe);
         fabAddRecipe.setOnClickListener(view -> showAddRecipeDialog());
+
+        if (savedInstanceState == null) {
+            initDatabase();
+            insertExampleRecipe();
+        }
+    }
+
+    private void initDatabase() {
+        appDatabase = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class,
+                "recipe_database")
+                        .build();
+        recipeDao = appDatabase.recipeDao();
+        insertExampleRecipe();
     }
 
     private void insertExampleRecipe() {
@@ -221,7 +230,13 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
                 newRecipe.setPhoto(null);
             }
 
-            recipes.add(newRecipe);
+            //recipes.add(newRecipe);
+
+            Executor executor = Executors.newSingleThreadExecutor();
+            executor.execute(() -> {
+                recipeDao.insertRecipe(newRecipe);
+                loadRecipes();
+            });
 
             // Notificar al adaptador que se ha agregado un nuevo elemento en la última posición
             int newPos = recipes.size() - 1;
@@ -235,6 +250,18 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
 
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
+    }
+
+    void loadRecipes() {
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            List<Recipe> recipeList = recipeDao.getAllRecipes();
+            runOnUiThread(() -> {
+                recipes.clear();
+                recipes.addAll(recipeList);
+                mAdapter.notifyDataSetChanged();
+            });
+        });
     }
 
     /**

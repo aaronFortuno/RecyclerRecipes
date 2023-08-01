@@ -16,20 +16,24 @@ public class InsertExampleRecipeRunnable implements Runnable {
 
     @Override
     public void run() {
-        Recipe recipe1 = new Recipe();
-        recipe1.setId(1);
-        recipe1.setTitle("Receta 1");
-        recipe1.setResume("Resumen de la receta 1");
-        recipe1.setDetails("Detalles de la receta 1");
-        recipe1.setPhoto("content://net.estemon.codelabs111_recyclerrecipes/drawable/recipe_1_photo");
-        recipeDao.insertRecipe(recipe1);
-        Log.i("InsertExampleRecipeRunnable", "Inserted id " + recipe1.getId());
+        if (recipeDao.getRecipeCount() == 0) {
+            Recipe recipe1 = new Recipe();
+            recipe1.setId(1);
+            recipe1.setTitle("Receta 1");
+            recipe1.setResume("Resumen de la receta 1");
+            recipe1.setDetails("Detalles de la receta 1");
+            recipe1.setPhoto("content://net.estemon.codelabs111_recyclerrecipes/drawable/recipe_1_photo");
+            recipeDao.insertRecipe(recipe1);
+            Log.i("InsertExampleRecipeRunnable", "Inserted id " + recipe1.getId());
 
-        List<Recipe> allRecipes = recipeDao.getAllRecipes();
-        mainActivity.runOnUiThread(() -> {
-            mainActivity.recipes.clear();
-            mainActivity.recipes.addAll(allRecipes);
-            mainActivity.mAdapter.notifyDataSetChanged();
-        });
+            List<Recipe> allRecipes = recipeDao.getAllRecipes();
+            mainActivity.runOnUiThread(() -> {
+                mainActivity.recipes.clear();
+                mainActivity.recipes.addAll(allRecipes);
+                mainActivity.mAdapter.notifyDataSetChanged();
+            });
+        }
+
+        mainActivity.loadRecipes();
     }
 }
