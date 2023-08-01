@@ -33,6 +33,13 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <FrameLayout
+        android:id="@+id/frame_layout_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foregroundGravity="center"
+        android:padding="16dp" />
+
     <!-- Menú lateral -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"

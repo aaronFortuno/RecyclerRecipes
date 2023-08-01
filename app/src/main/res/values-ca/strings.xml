@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">RecyclerRecipes</string>
+    <string name="close_button">Tancar</string>
+    <string name="recipe_id">ID de la recepta</string>
+    <string name="recipe_title">Nom de la recepta</string>
+    <string name="recipe_resume">Resum de la recepta</string>
+    <string name="recipe_details">Detalls de la recepta</string>
+    <string name="take_photo_button">Fer una foto</string>
+    <string name="recycler_item_id">"id: "</string>
+    <string name="recipe_image_content_description">Imatge de la recepta</string>
+    <string name="photo_preview_content_description">Previsualització de la imatge</string>
+    <string name="fab_button_content_description">Botó d\'acció flotant - Afegir nova recepta</string>
+    <string name="menu_change_language">Idioma</string>
+    <string name="menu_change_theme">Tema</string>
+    <string name="nav_header_title">RecyclerRecipes</string>
+    <string name="nav_header_created_by">Creat per estemon</string>
+    <string name="nav_header_content_description">Capçalera de navegació</string>
+    <string name="fragment_language_title">Selecciona idioma</string>
+    <string name="fragment_language_apply_language">Aplicar idioma</string>
+    <string name="fragment_language_cancel">Cancel·lar</string>
+</resources>

@@ -5,8 +5,12 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_settings"
-            android:title="@string/nav_settings_text"/>
+            android:id="@+id/menu_change_language"
+            android:icon="@drawable/ic_language"
+            android:title="@string/menu_change_language"/>
+        <item
+            android:id="@+id/menu_change_theme"
+            android:icon="@drawable/ic_theme_dark"
+            android:title="@string/menu_change_theme" />
     </group>
 </menu>

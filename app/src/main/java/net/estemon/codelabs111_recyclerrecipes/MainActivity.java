@@ -24,12 +24,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +48,7 @@ import java.util.concurrent.Executors;
  * MainActivity que muestra una lista de recetas en un RecyclerView.
  * Permite agregar nuevas recetas y ver los detalles de las recetas existentes.
  */
-public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnRecipeClickListener, View.OnCreateContextMenuListener {
+public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnRecipeClickListener, View.OnCreateContextMenuListener, LanguageFragment.LanguageFragmentListener {
 
     // Lista para almacenar los datos de las recetas
     final List<Recipe> recipes = new ArrayList<>();
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
     private RecipeDao recipeDao;
 
     private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     public MainActivity() {
     }
@@ -83,6 +86,17 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.menu_change_language) {
+                openLanguageChangeFragment();
+            } else if (item.getItemId() == R.id.menu_change_theme) {
+                openThemeChangeFragment();
+            }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
 
         // Configura el RecyclerView y el adaptador
         RecyclerView mRecyclerView = findViewById(R.id.recycler_view);
@@ -110,6 +124,21 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         }
 
         registerForContextMenu(mRecyclerView);
+    }
+
+    private void openLanguageChangeFragment() {
+        LanguageFragment languageFragment = new LanguageFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_layout_content, languageFragment)
+                .addToBackStack(null)
+                .commit();
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+
+    }
+
+    private void openThemeChangeFragment() {
     }
 
     @Override
@@ -414,5 +443,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public void onLanguageFragmentClosed() {
+        // Cerrar el Fragment
+        getSupportFragmentManager().popBackStack();
     }
 }
