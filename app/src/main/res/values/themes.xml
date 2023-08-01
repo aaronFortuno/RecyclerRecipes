@@ -1,8 +1,15 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.Codelabs111RecyclerRecipes" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <!-- Base application theme -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here -->
+        <!-- ... -->
+        <item name="android:homeAsUpIndicator">@drawable/ic_menu</item>
     </style>
 
     <style name="Theme.Codelabs111RecyclerRecipes" parent="Base.Theme.Codelabs111RecyclerRecipes" />

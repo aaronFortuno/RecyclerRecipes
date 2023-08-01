@@ -22,6 +22,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -36,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -58,12 +61,15 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
 
     private RecipeDao recipeDao;
 
+    private DrawerLayout drawerLayout;
+
     public MainActivity() {
     }
 
     /**
      * Crea y configura la actividad, inicializa la interfaz de usuario y las listas de recetas.
      */
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +78,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         initDatabase();
 
         setContentView(R.layout.activity_main);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         // Configura el RecyclerView y el adaptador
         RecyclerView mRecyclerView = findViewById(R.id.recycler_view);
@@ -101,6 +112,18 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         registerForContextMenu(mRecyclerView);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         if (v.getId() == R.id.recycler_view) {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Codelabs11.1 - Recycler Recipes</string>
+    <string name="app_name">RecyclerRecipes</string>
     <string name="close_button">Cerrar</string>
     <string name="recipe_id">ID de la receta</string>
     <string name="recipe_title">Nombre de la receta</string>
@@ -9,4 +9,5 @@
     <string name="recycler_item_id">"id: "</string>
     <string name="recipe_image_content_description">Recipe image</string>
     <string name="photo_preview_content_description">Previsualización de la imagen</string>
+    <string name="fab_button_content_description">Floating Action Button - Add new recipe</string>
 </resources>
