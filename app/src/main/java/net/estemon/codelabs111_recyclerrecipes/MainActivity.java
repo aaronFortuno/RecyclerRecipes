@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         }
 
         registerForContextMenu(mRecyclerView);
-        printAllRecipes();
     }
 
     @Override
@@ -112,19 +111,26 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if (item.getItemId() == 0) {
-            int position = item.getOrder();
-            // Eliminar la receta de la base de datos
-            Recipe recipeToDelete = recipes.get(position);
-            Executor executor = Executors.newSingleThreadExecutor();
-            executor.execute(() -> {
-                recipeDao.deleteRecipe(recipeToDelete);
-                loadRecipes();
-            });
-            return true;
+        int position = item.getOrder();
+        switch (item.getItemId()) {
+            case 0:
+                showModifyRecipeDialog(position);
+                return true;
+            case 1:
+                // Eliminar la receta de la base de datos
+                Recipe recipeToDelete = recipes.get(position);
+                Executor executor = Executors.newSingleThreadExecutor();
+                executor.execute(() -> {
+                    recipeDao.deleteRecipe(recipeToDelete);
+                    loadRecipes();
+                });
+                return true;
+            default:
+                return super.onContextItemSelected(item);
         }
-        return super.onContextItemSelected(item);
     }
+
+
 
     private void initDatabase() {
         AppDatabase appDatabase = Room.databaseBuilder(getApplicationContext(),
@@ -277,6 +283,84 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         alertDialog.show();
     }
 
+    private void showModifyRecipeDialog(int position) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.add_recipe_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        EditText addRecipeTitle = dialogView.findViewById(R.id.add_recipe_title);
+        EditText addRecipeResume = dialogView.findViewById(R.id.add_recipe_resume);
+        EditText addRecipeDetails = dialogView.findViewById(R.id.add_recipe_details);
+        Button addRecipePhoto = dialogView.findViewById(R.id.add_recipe_photo);
+        final ImageView previewRecipePhoto = dialogView.findViewById(R.id.preview_recipe_photo);
+
+        Recipe recipe = recipes.get(position);
+        addRecipeTitle.setText(recipe.getTitle());
+        addRecipeResume.setText(recipe.getResume());
+        addRecipeDetails.setText(recipe.getDetails());
+        Glide.with(MainActivity.this)
+                .load(photoUri)
+                .into(previewRecipePhoto);
+
+        addRecipePhoto.setOnClickListener(view -> {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                File photoFile = createImageFile();
+                if (photoFile != null) {
+                    photoUri = CustomFileProvider.getUriForFile(
+                            MainActivity.this,
+                            "net.estemon.codelabs111_recyclerrecipes.fileprovider",
+                            photoFile
+                    );
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    captureImageLauncher.launch(photoUri);
+                    Glide.with(MainActivity.this)
+                            .load(photoUri)
+                            .into(previewRecipePhoto);
+                }
+            }
+        });
+
+        /*
+          Define el comportamiento del botón de confirmar los datos del diálogo
+          En este caso, mostrar en el listado de recetas los datos de la nueva receta
+         */
+        dialogBuilder.setPositiveButton("Añadir receta", (dialogInterface, i) -> {
+            String recipeTitle = addRecipeTitle.getText().toString().trim();
+            String recipeResume = addRecipeResume.getText().toString().trim();
+            String recipeDetails = addRecipeDetails.getText().toString().trim();
+
+            recipe.setTitle(recipeTitle);
+            recipe.setResume(recipeResume);
+            recipe.setDetails(recipeDetails);
+            if (photoUri != null) {
+                recipe.setPhoto(photoUri.toString());
+            } else {
+                Uri defaultPhotoUri = Uri.parse("content://" + getPackageName() + "/res/drawable/ic_add.png");
+                recipe.setPhoto(defaultPhotoUri.toString());
+            }
+
+            //recipes.add(newRecipe);
+
+            Executor executor = Executors.newSingleThreadExecutor();
+            executor.execute(() -> {
+                recipeDao.insertRecipe(recipe);
+                loadRecipes();
+            });
+
+            // Notificar al adaptador que se ha agregado un nuevo elemento en la última posición
+            int newPos = recipes.size() - 1;
+            mAdapter.notifyItemInserted(newPos);
+            mAdapter.notifyDataSetChanged();
+        });
+
+        dialogBuilder.setNegativeButton("Cancelar", null);
+
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+    }
+
     void loadRecipes() {
         Executor executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
@@ -308,15 +392,5 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
             e.printStackTrace();
             return null;
         }
-    }
-
-    private void printAllRecipes() {
-        Executor executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            List<Recipe> allRecipes = recipeDao.getAllRecipes();
-            for (Recipe recipe : allRecipes) {
-                Log.i("MainActivity", "Recipe ID: " + recipe.getId() + ", Title: " + recipe.getTitle() + ", Resume: " + recipe.getResume() + ", Details: " + recipe.getDetails() + ", Photo: " + recipe.getPhoto());
-            }
-        });
     }
 }

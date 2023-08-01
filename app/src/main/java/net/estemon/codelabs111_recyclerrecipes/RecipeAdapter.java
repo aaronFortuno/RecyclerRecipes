@@ -96,7 +96,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
             }
         });
 
-        holder.itemView.setOnCreateContextMenuListener((menu, v, menuInfo) -> menu.add(0, 0, position, "Eliminar receta"));
+        holder.itemView.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+            menu.add(0, 0, position, "Modificar receta");
+            menu.add(0, 1, position, "Eliminar receta");
+        });
     }
 
     /**
