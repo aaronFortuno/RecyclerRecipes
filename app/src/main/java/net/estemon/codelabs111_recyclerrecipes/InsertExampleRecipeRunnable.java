@@ -22,7 +22,7 @@ public class InsertExampleRecipeRunnable implements Runnable {
             recipe1.setTitle("Receta 1");
             recipe1.setResume("Resumen de la receta 1");
             recipe1.setDetails("Detalles de la receta 1");
-            recipe1.setPhoto("content://net.estemon.codelabs111_recyclerrecipes/drawable/recipe_1_photo");
+            recipe1.setPhoto("content://net.estemon.codelabs111_recyclerrecipes/drawable/ic_add");
             recipeDao.insertRecipe(recipe1);
             Log.i("InsertExampleRecipeRunnable", "Inserted id " + recipe1.getId());
 

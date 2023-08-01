@@ -2,6 +2,7 @@ package net.estemon.codelabs111_recyclerrecipes;
 
 import android.net.Uri;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +23,6 @@ import java.util.List;
  */
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHolder> {
 
-    /*private final List<String> titles;
-    private final List<String> resumes;
-    private final List<String> details;
-    private final List<Uri> photos;*/
-
     private List<Recipe> recipes = new ArrayList<>();
 
     // Interface to handle clicks in the recipe elements.
@@ -36,13 +32,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
      * Constructor for the RecipeAdapter.
      *
      * @param recipes  The recipes of the DB
-     * @param listener The listener to handle recipe item clicks.
      */
-    public RecipeAdapter(List<Recipe> recipes, OnRecipeClickListener listener) {
+    public RecipeAdapter(List<Recipe> recipes) {
         this.recipes = recipes;
-        recipeClickListener = listener;
     }
 
+    public interface OnRecipeLongClickListener {
+        void onRecipeLongClick(int position);
+    }
     /**
      * Called when the RecyclerView needs a new {@link RecipeHolder} to represent an item.
      *
@@ -54,7 +51,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
     @Override
     public RecipeAdapter.RecipeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View recipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_item, parent, false);
-        return new RecipeHolder(recipeView);
+        RecipeHolder holder = new RecipeHolder(recipeView);
+        return holder;
     }
 
     /**
@@ -74,7 +72,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
         String photoUriString = recipe.getPhoto();
         Uri photoUri = Uri.parse(photoUriString);
 
-        // Set the title and resume in the corresponding views
+        // Set the id, title and resume in the corresponding views
+        holder.itemView.setTag(position);
         holder.recipeTitleView.setText(title);
         holder.recipeResumeView.setText(resume);
 
@@ -98,6 +97,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
                 // Invoke the callback method when the item view is clicked
                 recipeClickListener.onRecipeClick(title, photoUri, detail);
             }
+        });
+
+        holder.itemView.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+            menu.add(0, 0, position, "Eliminar receta");
         });
     }
 

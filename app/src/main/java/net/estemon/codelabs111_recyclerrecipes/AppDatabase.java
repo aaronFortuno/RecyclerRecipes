@@ -25,4 +25,8 @@ public abstract class AppDatabase extends RoomDatabase {
                 .allowMainThreadQueries() // TODO: No permitido en producción, solo para simplificar el ejemplo
                 .build();
     }
+
+    public void deleteRecipe(Recipe recipe) {
+        recipeDao().deleteRecipe(recipe);
+    }
 }

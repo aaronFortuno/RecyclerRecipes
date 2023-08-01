@@ -1,6 +1,7 @@
 package net.estemon.codelabs111_recyclerrecipes;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -17,4 +18,7 @@ public interface RecipeDao {
 
     @Query("SELECT COUNT(*) FROM recipes")
     int getRecipeCount();
+
+    @Delete
+    void deleteRecipe(Recipe recipe);
 }

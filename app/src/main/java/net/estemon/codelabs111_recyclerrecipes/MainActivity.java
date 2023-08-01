@@ -5,8 +5,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,6 +24,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Insert;
 import androidx.room.Room;
 
 import com.bumptech.glide.Glide;
@@ -39,7 +44,7 @@ import java.util.concurrent.Executors;
  * MainActivity que muestra una lista de recetas en un RecyclerView.
  * Permite agregar nuevas recetas y ver los detalles de las recetas existentes.
  */
-public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnRecipeClickListener {
+public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnRecipeClickListener, View.OnCreateContextMenuListener {
 
     // Lista para almacenar los datos de las recetas
     final List<Recipe> recipes = new ArrayList<>();
@@ -73,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
 
         // Configura el RecyclerView y el adaptador
         mRecyclerView = findViewById(R.id.recycler_view);
-        mAdapter = new RecipeAdapter(recipes, this);
+        mAdapter = new RecipeAdapter(recipes);
 
         // Registra el OnRecipeClickListener en el adaptador
         mAdapter.setOnRecipeClickListener(this);
@@ -95,6 +100,34 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
             initDatabase();
             insertExampleRecipe();
         }
+
+        registerForContextMenu(mRecyclerView);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+       if (v.getId() == R.id.recycler_view) {
+           MenuInflater inflater = getMenuInflater();
+           inflater.inflate(R.menu.recipe_context_menu, menu);
+       }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        if (item.getItemId() == 0) {
+            int position = item.getOrder();
+            // Eliminar la receta de la base de datos
+            Recipe recipeToDelete = recipes.get(position);
+            Executor executor = Executors.newSingleThreadExecutor();
+            executor.execute(() -> {
+                recipeDao.deleteRecipe(recipeToDelete);
+                loadRecipes();
+            });
+            return true;
+        }
+        return super.onContextItemSelected(item);
     }
 
     private void initDatabase() {
@@ -224,7 +257,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
             if (photoUri != null) {
                 newRecipe.setPhoto(photoUri.toString());
             } else {
-                newRecipe.setPhoto(null);
+                Uri defaultPhotoUri = Uri.parse("content://" + getPackageName() + "/res/drawable/ic_add.png");
+                newRecipe.setPhoto(defaultPhotoUri.toString());
             }
 
             //recipes.add(newRecipe);
@@ -239,8 +273,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
             int newPos = recipes.size() - 1;
             mAdapter.notifyItemInserted(newPos);
             mAdapter.notifyDataSetChanged();
-
-            mRecyclerView.smoothScrollToPosition(newPos);
         });
 
         dialogBuilder.setNegativeButton("Cancelar", null);
