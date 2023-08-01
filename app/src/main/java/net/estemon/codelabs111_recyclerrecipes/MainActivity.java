@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
         }
 
         registerForContextMenu(mRecyclerView);
+        printAllRecipes();
     }
 
     @Override
@@ -306,5 +308,15 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
             e.printStackTrace();
             return null;
         }
+    }
+
+    private void printAllRecipes() {
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            List<Recipe> allRecipes = recipeDao.getAllRecipes();
+            for (Recipe recipe : allRecipes) {
+                Log.i("MainActivity", "Recipe ID: " + recipe.getId() + ", Title: " + recipe.getTitle() + ", Resume: " + recipe.getResume() + ", Details: " + recipe.getDetails() + ", Photo: " + recipe.getPhoto());
+            }
+        });
     }
 }

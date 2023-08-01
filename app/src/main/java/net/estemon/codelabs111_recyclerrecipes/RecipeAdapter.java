@@ -70,7 +70,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeHold
 
         // Set the id, title and resume in the corresponding views
         holder.itemView.setTag(position);
-        holder.recipeIdView.setText(R.string.recycler_item_id + id);
+        holder.recipeIdView.setText("id: " + id);
         holder.recipeTitleView.setText(title);
         holder.recipeResumeView.setText(resume);
 
