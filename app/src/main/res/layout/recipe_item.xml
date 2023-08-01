@@ -18,7 +18,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="0dp"
             android:textColor="#606060"
-            android:textSize="10sp"
+            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,7 +42,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/albondigas_recipe_photo" />
+            app:srcCompat="@drawable/albondigas_recipe_photo"
+            android:contentDescription="@string/recipe_image_content_description" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView

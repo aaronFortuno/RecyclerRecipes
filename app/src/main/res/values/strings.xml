@@ -7,4 +7,6 @@
     <string name="recipe_details">Detalles de la receta</string>
     <string name="take_photo_button">Tomar una foto</string>
     <string name="recycler_item_id">"id: "</string>
+    <string name="recipe_image_content_description">Recipe image</string>
+    <string name="photo_preview_content_description">Previsualización de la imagen</string>
 </resources>

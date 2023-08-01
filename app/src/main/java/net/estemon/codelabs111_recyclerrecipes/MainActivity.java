@@ -103,10 +103,10 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-       if (v.getId() == R.id.recycler_view) {
-           MenuInflater inflater = getMenuInflater();
-           inflater.inflate(R.menu.recipe_context_menu, menu);
-       }
+        if (v.getId() == R.id.recycler_view) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.recipe_context_menu, menu);
+        }
     }
 
     @Override
@@ -129,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
                 return super.onContextItemSelected(item);
         }
     }
-
 
 
     private void initDatabase() {
@@ -227,14 +226,23 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
 
         addRecipePhotoAction(addRecipePhoto, previewRecipePhoto);
 
+        dialogBuilder.setPositiveButton("Añadir receta", null);
+        dialogBuilder.setNegativeButton("Cancelar", null);
+
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+
         /*
           Define el comportamiento del botón de confirmar los datos del diálogo
           En este caso, mostrar en el listado de recetas los datos de la nueva receta
          */
-        dialogBuilder.setPositiveButton("Añadir receta", (dialogInterface, i) -> {
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
             String recipeTitle = addRecipeTitle.getText().toString().trim();
             String recipeResume = addRecipeResume.getText().toString().trim();
             String recipeDetails = addRecipeDetails.getText().toString().trim();
+
+            if (checkDataCompleteness(recipeTitle, recipeResume, recipeDetails))
+                return; // Detener el proceso de guardado si falta información obligatoria
 
             Recipe newRecipe = new Recipe();
             newRecipe.setTitle(recipeTitle);
@@ -247,24 +255,18 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
                 newRecipe.setPhoto(defaultPhotoUri.toString());
             }
 
-            //recipes.add(newRecipe);
-
             Executor executor = Executors.newSingleThreadExecutor();
             executor.execute(() -> {
                 recipeDao.insertRecipe(newRecipe);
                 loadRecipes();
             });
 
-            // Notificar al adaptador que se ha agregado un nuevo elemento en la última posición
             int newPos = recipes.size() - 1;
             mAdapter.notifyItemInserted(newPos);
             mAdapter.notifyDataSetChanged();
+
+            alertDialog.dismiss();
         });
-
-        dialogBuilder.setNegativeButton("Cancelar", null);
-
-        AlertDialog alertDialog = dialogBuilder.create();
-        alertDialog.show();
     }
 
     @SuppressLint("QueryPermissionsNeeded")
@@ -312,14 +314,23 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
 
         addRecipePhotoAction(addRecipePhoto, previewRecipePhoto);
 
+        dialogBuilder.setPositiveButton("Guardar cambios", null);
+        dialogBuilder.setNegativeButton("Cancelar", null);
+
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+
         /*
           Define el comportamiento del botón de confirmar los datos del diálogo
           En este caso, mostrar en el listado de recetas los datos de la nueva receta
          */
-        dialogBuilder.setPositiveButton("Guardar cambios", (dialogInterface, i) -> {
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
             String recipeTitle = addRecipeTitle.getText().toString().trim();
             String recipeResume = addRecipeResume.getText().toString().trim();
             String recipeDetails = addRecipeDetails.getText().toString().trim();
+
+            if (checkDataCompleteness(recipeTitle, recipeResume, recipeDetails))
+                return; // Detener el proceso de guardado si falta información obligatoria
 
             recipe.setTitle(recipeTitle);
             recipe.setResume(recipeResume);
@@ -337,10 +348,15 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnR
             });
         });
 
-        dialogBuilder.setNegativeButton("Cancelar", null);
 
-        AlertDialog alertDialog = dialogBuilder.create();
-        alertDialog.show();
+    }
+
+    private boolean checkDataCompleteness(String recipeTitle, String recipeResume, String recipeDetails) {
+        if (recipeTitle.trim().isEmpty() || recipeResume.trim().isEmpty() || recipeDetails.trim().isEmpty()) {
+            Toast.makeText(MainActivity.this, "Por favor, completa todos los campos obligatorios", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
     }
 
     @SuppressLint("NotifyDataSetChanged")
