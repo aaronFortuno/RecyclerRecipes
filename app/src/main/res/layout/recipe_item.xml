@@ -42,7 +42,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/albondigas_recipe_photo"
+            app:srcCompat="@drawable/ic_add"
             android:contentDescription="@string/recipe_image_content_description" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="recipe_ids">
-        <item>albondigas</item>
-        <item>pastel_zanahoria</item>
-        <item>ensalada_cesar</item>
-    </string-array>
-</resources>

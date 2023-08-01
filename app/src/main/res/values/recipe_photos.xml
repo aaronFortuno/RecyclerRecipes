@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="albondigas_recipe_photo">@drawable/albondigas_recipe_photo</string>
-    <string name="pastel_zanahoria_recipe_photo">@drawable/pastel_zanahoria_recipe_photo</string>
-    <string name="ensalada_cesar_recipe_photo">@drawable/ensalada_cesar_recipe_photo</string>
-</resources>
